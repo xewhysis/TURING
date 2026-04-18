@@ -8,6 +8,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/turing4.dir/mainwindow.cpp.o.d"
   "CMakeFiles/turing4.dir/turing4_autogen/mocs_compilation.cpp.o"
   "CMakeFiles/turing4.dir/turing4_autogen/mocs_compilation.cpp.o.d"
+  "CMakeFiles/turing4.dir/turingmachine.cpp.o"
+  "CMakeFiles/turing4.dir/turingmachine.cpp.o.d"
   "turing4"
   "turing4.pdb"
   "turing4_autogen/mocs_compilation.cpp"

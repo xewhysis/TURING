@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/xewhysis/C++/gitprojects/turing4/main.cpp" "CMakeFiles/turing4.dir/main.cpp.o" "gcc" "CMakeFiles/turing4.dir/main.cpp.o.d"
   "/home/xewhysis/C++/gitprojects/turing4/mainwindow.cpp" "CMakeFiles/turing4.dir/mainwindow.cpp.o" "gcc" "CMakeFiles/turing4.dir/mainwindow.cpp.o.d"
   "/home/xewhysis/C++/gitprojects/turing4/build/Desktop-Debug/turing4_autogen/mocs_compilation.cpp" "CMakeFiles/turing4.dir/turing4_autogen/mocs_compilation.cpp.o" "gcc" "CMakeFiles/turing4.dir/turing4_autogen/mocs_compilation.cpp.o.d"
+  "/home/xewhysis/C++/gitprojects/turing4/turingmachine.cpp" "CMakeFiles/turing4.dir/turingmachine.cpp.o" "gcc" "CMakeFiles/turing4.dir/turingmachine.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

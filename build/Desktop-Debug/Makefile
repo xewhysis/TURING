@@ -272,6 +272,30 @@ turing4_autogen/mocs_compilation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/turing4.dir/build.make CMakeFiles/turing4.dir/turing4_autogen/mocs_compilation.cpp.s
 .PHONY : turing4_autogen/mocs_compilation.cpp.s
 
+turingmachine.o: turingmachine.cpp.o
+.PHONY : turingmachine.o
+
+# target to build an object file
+turingmachine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turing4.dir/build.make CMakeFiles/turing4.dir/turingmachine.cpp.o
+.PHONY : turingmachine.cpp.o
+
+turingmachine.i: turingmachine.cpp.i
+.PHONY : turingmachine.i
+
+# target to preprocess a source file
+turingmachine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turing4.dir/build.make CMakeFiles/turing4.dir/turingmachine.cpp.i
+.PHONY : turingmachine.cpp.i
+
+turingmachine.s: turingmachine.cpp.s
+.PHONY : turingmachine.s
+
+# target to generate assembly for a file
+turingmachine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/turing4.dir/build.make CMakeFiles/turing4.dir/turingmachine.cpp.s
+.PHONY : turingmachine.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -296,6 +320,9 @@ help:
 	@echo "... turing4_autogen/mocs_compilation.o"
 	@echo "... turing4_autogen/mocs_compilation.i"
 	@echo "... turing4_autogen/mocs_compilation.s"
+	@echo "... turingmachine.o"
+	@echo "... turingmachine.i"
+	@echo "... turingmachine.s"
 .PHONY : help
 
 

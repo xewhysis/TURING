@@ -1,0 +1,4 @@
+#ifndef TURINGMACHINE_H
+#define TURINGMACHINE_H
+
+#endif // TURINGMACHINE_H
