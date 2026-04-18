@@ -2,30 +2,167 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>800</width>
-    <height>600</height>
-   </rect>
-  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Turing Machine</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>20</height>
-    </rect>
-   </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout">
+
+    <!-- ===== АЛФАВИТЫ ===== -->
+    <item>
+     <layout class="QHBoxLayout">
+
+      <item>
+       <widget class="QLabel">
+        <property name="text">
+         <string>Основной:</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLineEdit" name="mainAlphabetLine">
+        <property name="placeholderText">
+         <string>a b c</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLabel">
+        <property name="text">
+         <string>Доп:</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QLineEdit" name="extraAlphabetLine">
+        <property name="placeholderText">
+         <string>x y z</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QPushButton" name="setAlphabetButton">
+        <property name="text">
+         <string>Задать алфавит</string>
+        </property>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+
+    <!-- ===== ВВОД СТРОКИ ===== -->
+    <item>
+     <widget class="QLineEdit" name="inputLine">
+      <property name="placeholderText">
+       <string>Введите начальную строку</string>
+      </property>
+     </widget>
+    </item>
+
+    <item>
+     <widget class="QPushButton" name="setTapeButton">
+      <property name="text">
+       <string>Задать строку</string>
+      </property>
+     </widget>
+    </item>
+
+    <!-- ===== ТАБЛИЦА ===== -->
+    <item>
+     <widget class="QTableWidget" name="rulesTable"/>
+    </item>
+
+    <!-- ===== КНОПКИ УПРАВЛЕНИЯ ===== -->
+    <item>
+     <layout class="QHBoxLayout">
+
+      <item>
+       <widget class="QPushButton" name="stepButton">
+        <property name="text">
+         <string>Шаг</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QPushButton" name="runButton">
+        <property name="text">
+         <string>Старт</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QPushButton" name="stopButton">
+        <property name="text">
+         <string>Стоп</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QPushButton" name="addStateButton">
+        <property name="text">
+         <string>Добавить состояние</string>
+        </property>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+
+    <!-- ===== СКОРОСТЬ ===== -->
+    <item>
+     <layout class="QHBoxLayout">
+
+      <item>
+       <widget class="QLabel">
+        <property name="text">
+         <string>Скорость:</string>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QSlider" name="speedSlider">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="minimum">
+         <number>100</number>
+        </property>
+        <property name="maximum">
+         <number>900</number>
+        </property>
+        <property name="value">
+         <number>400</number>
+        </property>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+
+    <!-- ===== ЛЕНТА ===== -->
+    <item>
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="minimumHeight">
+       <number>120</number>
+      </property>
+     </widget>
+    </item>
+
+   </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
+
  <resources/>
  <connections/>
 </ui>
+
