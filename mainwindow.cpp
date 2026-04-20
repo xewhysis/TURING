@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
-    for(int i=0;i<31;i++){
+    for (int i = 0; i < 31; i++) {
         auto t = scene->addText("^");
         t->setPos(i*40,0);
         tapeItems.append(t);
@@ -89,7 +89,7 @@ void MainWindow::on_setAlphabetButton_clicked() {
     buildTable();
 }
 
-// ===== ТАБЛИЦА =====
+//ТАБЛИЦА
 void MainWindow::buildTable() {
     ui->rulesTable->setColumnCount(fullAlphabet.size());
     ui->rulesTable->setHorizontalHeaderLabels(fullAlphabet);
@@ -98,7 +98,7 @@ void MainWindow::buildTable() {
     ui->rulesTable->setVerticalHeaderLabels({"q0","q1","q2"});
 }
 
-// ===== ДОБАВИТЬ СОСТОЯНИЕ =====
+// ДОБАВИТЬ СОСТОЯybt
 void MainWindow::on_addStateButton_clicked() {
     int row = ui->rulesTable->rowCount();
     ui->rulesTable->insertRow(row);
@@ -106,12 +106,12 @@ void MainWindow::on_addStateButton_clicked() {
     new QTableWidgetItem("q" + QString::number(row)));
 }
 
-// ===== СТРОКА =====
+//СТРОКА
 void MainWindow::on_setTapeButton_clicked() {
     QString s = ui->inputLine->text();
 
     for (QChar c: s) {
-        if(!mainAlphabet.contains(QString(c))){
+        if (!mainAlphabet.contains(QString(c))){
             QMessageBox::warning(
                 this,"Ошибка","Символ не из основного алфавита");
             return;
@@ -125,17 +125,17 @@ void MainWindow::on_setTapeButton_clicked() {
     updateView();
 }
 
-// ===== ПРАВИЛА =====
+// ПРАВИЛА
 void MainWindow::loadRules() {
-    for (int i=0;i<ui->rulesTable->rowCount();++i) {
+    for (int i = 0; i < ui->rulesTable->rowCount(); ++i) {
         QString state = ui->rulesTable->verticalHeaderItem(i)->text();
 
-        for (int j=0;j<ui->rulesTable->columnCount();++j) {
+        for (int j = 0 ; j < ui->rulesTable->columnCount(); ++j) {
             auto item = ui->rulesTable->item(i,j);
-            if(!item) continue;
+            if (!item) continue;
 
             QStringList p = item->text().split(',');
-            if(p.size()!=3) continue;
+            if (p.size()!=3) continue;
 
             Rule r{p[0][0], p[1]=="R"?1:(p[1]=="L"?-1:0), p[2]};
             machine.setRule(state, fullAlphabet[j][0], r);
@@ -162,7 +162,7 @@ void MainWindow::updateView() {
     }
 
     // ОБНОВЛЯЕМ ЛЕНТУ
-    for(int i = 0; i < tapeItems.size(); i++){
+    for (int i = 0; i < tapeItems.size(); i++){
         int pos = offset + i;
         QChar c = machine.getSymbol(pos);
         tapeItems[i]->setPlainText(QString(c));
@@ -185,16 +185,16 @@ void MainWindow::highlightCell() {
     for (int i=0;i<ui->rulesTable->rowCount();i++) {
         for (int j=0;j<ui->rulesTable->columnCount();j++) {
             auto item = ui->rulesTable->item(i,j);
-            if(item) item->setBackground(Qt::white);
+            if (item) item->setBackground(Qt::white);
         }
     }
 
-    for(int i=0;i<ui->rulesTable->rowCount();i++){
-        if(ui->rulesTable->verticalHeaderItem(i)->text()==state) {
-            for(int j=0;j<fullAlphabet.size();j++){
-                if(fullAlphabet[j][0]==symbol){
+    for (int i = 0; i < ui->rulesTable->rowCount(); ++i){
+        if (ui->rulesTable->verticalHeaderItem(i)->text()==state) {
+            for (int j = 0; j < fullAlphabet.size(); ++j){
+                if (fullAlphabet[j][0]==symbol){
                     auto item = ui->rulesTable->item(i,j);
-                    if(item) item->setBackground(Qt::yellow);
+                    if (item) item->setBackground(Qt::yellow);
                 }
             }
         }
@@ -203,14 +203,14 @@ void MainWindow::highlightCell() {
 
 // ШАГ
 void MainWindow::on_stepButton_clicked() {
-    if(!machine.step()){
+    if (!machine.step()){
         QMessageBox::information(this,"Стоп","Нет правила");
     }
     updateView();
 }
 
 void MainWindow::runStep() {
-    if(!machine.step()){
+    if (!machine.step()){
         timer.stop();
     }
     updateView();

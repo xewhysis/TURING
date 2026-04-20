@@ -13,7 +13,7 @@ void TuringMachine::setBlank(QChar b) {
 
 void TuringMachine::setTape(const QString &input) {
     tape.clear();
-    for (int i = 0; i < input.size(); i++)
+    for (int i = 0; i < input.size(); ++i)
         tape[i] = input[i];
 }
 
