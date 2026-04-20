@@ -5,31 +5,31 @@
 #include <QString>
 
 struct Rule {
-    QChar write;
-    int move;
-    QString nextState;
+  QChar write;
+  int move;
+  QString nextState;
 };
 
 class TuringMachine {
-public:
-    void reset();
-    void setTape(const QString &input);
-    void setRule(const QString &state, QChar symbol, const Rule &rule);
-    void setBlank(QChar b);
+ public:
+  void reset();
+  void setTape(const QString &input);
+  void setRule(const QString &state, QChar symbol, const Rule &rule);
+  void setBlank(QChar b);
 
-    bool step();
+  bool step();
 
-    QString getState() const;
-    int getHead() const;
-    QChar getSymbol(int pos) const;
+  QString getState() const;
+  int getHead() const;
+  QChar getSymbol(int pos) const;
 
-private:
-    QMap<int,QChar> tape;
-    QMap<QString, QMap<QChar, Rule>> rules;
+ private:
+  QMap<int,QChar> tape;
+  QMap<QString, QMap<QChar, Rule>> rules;
 
-    int head = 0;
-    QString currentState = "q0";
-    QChar blank = '_';
+  int head = 0;
+  QString currentState = "q0";
+  QChar blank = '^';
 };
 
 #endif

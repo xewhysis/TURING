@@ -17,7 +17,8 @@ void TuringMachine::setTape(const QString &input) {
         tape[i] = input[i];
 }
 
-void TuringMachine::setRule(const QString &state, QChar symbol, const Rule &rule) {
+void TuringMachine::setRule(const QString &state,
+                            QChar symbol, const Rule &rule) {
     rules[state][symbol] = rule;
 }
 

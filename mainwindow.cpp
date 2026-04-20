@@ -35,32 +35,39 @@ MainWindow::~MainWindow() {
 //АЛФАВИТ
 void MainWindow::on_setAlphabetButton_clicked() {
     mainAlphabet = ui->mainAlphabetLine->text().split(" ", Qt::SkipEmptyParts);
-    extraAlphabet = ui->extraAlphabetLine->text().split(" ", Qt::SkipEmptyParts);
+    extraAlphabet = ui->extraAlphabetLine->text().split(" ",
+                                                        Qt::SkipEmptyParts);
 
     for (QString line: mainAlphabet) {
         if (line.size() > 1) {
-            QMessageBox::warning(this,"Ошибка","Видимо вы не знаете что такое символ");
+            QMessageBox::warning(
+                this,"Ошибка","Видимо вы не знаете что такое символ");
             return;
         }
     }
 
     for (QString line: extraAlphabet) {
         if (line.size() > 1) {
-            QMessageBox::warning(this,"Ошибка","Видимо вы не знаете что такое символ");
+            QMessageBox::warning(
+                this,"Ошибка","Видимо вы не знаете что такое символ");
             return;
         }
     }
 
-    QSet<QString> mA = QSet<QString>(mainAlphabet.begin(), mainAlphabet.end());
-    QSet<QString> eA = QSet<QString>(extraAlphabet.begin(), extraAlphabet.end());
+    QSet<QString> mA = QSet<QString>(mainAlphabet.begin(),
+                                     mainAlphabet.end());
+    QSet<QString> eA = QSet<QString>(extraAlphabet.begin(),
+                                     extraAlphabet.end());
 
     if (mA.contains("^") || eA.contains("^")) {
-        QMessageBox::warning(this,"Ошибка","Уберите пожалуйста символ пустоты из алфавита");
+        QMessageBox::warning(
+            this,"Ошибка","Уберите пожалуйста символ пустоты из алфавита");
         return;
     }
 
     if (mA.intersects(eA)) {
-        QMessageBox::warning(this,"Ошибка","Похоже у вас есть одинаковые символы");
+        QMessageBox::warning(
+            this,"Ошибка","Похоже у вас есть одинаковые символы");
         return;
     }
 
@@ -96,7 +103,7 @@ void MainWindow::on_addStateButton_clicked() {
     int row = ui->rulesTable->rowCount();
     ui->rulesTable->insertRow(row);
     ui->rulesTable->setVerticalHeaderItem(row,
-                                          new QTableWidgetItem("q" + QString::number(row)));
+    new QTableWidgetItem("q" + QString::number(row)));
 }
 
 // ===== СТРОКА =====
@@ -105,7 +112,8 @@ void MainWindow::on_setTapeButton_clicked() {
 
     for (QChar c: s) {
         if(!mainAlphabet.contains(QString(c))){
-            QMessageBox::warning(this,"Ошибка","Символ не из основного алфавита");
+            QMessageBox::warning(
+                this,"Ошибка","Символ не из основного алфавита");
             return;
         }
     }
@@ -135,9 +143,8 @@ void MainWindow::loadRules() {
     }
 }
 
-// ===== ОБНОВЛЕНИЕ =====
-void MainWindow::updateView()
-{
+// ОБНОВЛЕНИЕ
+void MainWindow::updateView() {
     int realHead = machine.getHead();
 
     int visualHead = realHead - offset;
@@ -183,7 +190,7 @@ void MainWindow::highlightCell() {
     }
 
     for(int i=0;i<ui->rulesTable->rowCount();i++){
-        if(ui->rulesTable->verticalHeaderItem(i)->text()==state){
+        if(ui->rulesTable->verticalHeaderItem(i)->text()==state) {
             for(int j=0;j<fullAlphabet.size();j++){
                 if(fullAlphabet[j][0]==symbol){
                     auto item = ui->rulesTable->item(i,j);
@@ -209,11 +216,11 @@ void MainWindow::runStep() {
     updateView();
 }
 
-void MainWindow::on_runButton_clicked(){
+void MainWindow::on_runButton_clicked() {
     timer.start();
 }
 
-void MainWindow::on_stopButton_clicked(){
+void MainWindow::on_stopButton_clicked() {
     timer.stop();
 }
 
