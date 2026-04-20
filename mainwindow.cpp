@@ -1,50 +1,223 @@
-#include "turingmachine.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QMessageBox>
+#include <QPropertyAnimation>
+#include <QSet>
+#include <QDebug>
 
-void TuringMachine::reset() {
-    tape.clear();
-    rules.clear();
-    head = 0;
-    currentState = "q0";
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow) {
+
+    ui->setupUi(this);
+
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+
+    for(int i=0;i<31;i++){
+        auto t = scene->addText("^");
+        t->setPos(i*40,0);
+        tapeItems.append(t);
+    }
+
+    head = new HeadItem();
+    scene->addItem(head);
+    head->setPos(visibleCenter*40,40);
+
+    timer.setInterval(400);
+    connect(&timer,&QTimer::timeout,this,&MainWindow::runStep);
 }
 
-void TuringMachine::setBlank(QChar b) {
-    blank = b;
+MainWindow::~MainWindow() {
+    delete ui;
 }
 
-void TuringMachine::setTape(const QString &input) {
-    tape.clear();
-    for (int i = 0; i < input.size(); i++)
-        tape[i] = input[i];
+//АЛФАВИТ
+void MainWindow::on_setAlphabetButton_clicked() {
+    mainAlphabet = ui->mainAlphabetLine->text().split(" ", Qt::SkipEmptyParts);
+    extraAlphabet = ui->extraAlphabetLine->text().split(" ", Qt::SkipEmptyParts);
+
+    for (QString line: mainAlphabet) {
+        if (line.size() > 1) {
+            QMessageBox::warning(this,"Ошибка","Видимо вы не знаете что такое символ");
+            return;
+        }
+    }
+
+    for (QString line: extraAlphabet) {
+        if (line.size() > 1) {
+            QMessageBox::warning(this,"Ошибка","Видимо вы не знаете что такое символ");
+            return;
+        }
+    }
+
+    QSet<QString> mA = QSet<QString>(mainAlphabet.begin(), mainAlphabet.end());
+    QSet<QString> eA = QSet<QString>(extraAlphabet.begin(), extraAlphabet.end());
+
+    if (mA.contains("^") || eA.contains("^")) {
+        QMessageBox::warning(this,"Ошибка","Уберите пожалуйста символ пустоты из алфавита");
+        return;
+    }
+
+    if (mA.intersects(eA)) {
+        QMessageBox::warning(this,"Ошибка","Похоже у вас есть одинаковые символы");
+        return;
+    }
+
+    if (mainAlphabet.isEmpty()) {
+        QMessageBox::warning(this,"Ошибка","Введите основной алфавит");
+        return;
+    }
+
+    mainAlphabet = mA.values();
+    extraAlphabet = eA.values();
+
+    std::sort(mainAlphabet.begin(), mainAlphabet.end());
+    std::sort(extraAlphabet.begin(), extraAlphabet.end());
+
+    fullAlphabet = mainAlphabet;
+    fullAlphabet.append("^");
+    fullAlphabet.append(extraAlphabet);
+
+    buildTable();
 }
 
-void TuringMachine::setRule(const QString &state, QChar symbol, const Rule &rule) {
-    rules[state][symbol] = rule;
+// ===== ТАБЛИЦА =====
+void MainWindow::buildTable() {
+    ui->rulesTable->setColumnCount(fullAlphabet.size());
+    ui->rulesTable->setHorizontalHeaderLabels(fullAlphabet);
+
+    ui->rulesTable->setRowCount(3);
+    ui->rulesTable->setVerticalHeaderLabels({"q0","q1","q2"});
 }
 
-bool TuringMachine::step() {
-    QChar current = tape.contains(head) ? tape[head] : blank;
-
-    if (!rules.contains(currentState) ||
-        !rules[currentState].contains(current))
-        return false;
-
-    Rule r = rules[currentState][current];
-
-    tape[head] = r.write;
-    head += r.move;
-    currentState = r.nextState;
-
-    return true;
+// ===== ДОБАВИТЬ СОСТОЯНИЕ =====
+void MainWindow::on_addStateButton_clicked() {
+    int row = ui->rulesTable->rowCount();
+    ui->rulesTable->insertRow(row);
+    ui->rulesTable->setVerticalHeaderItem(row,
+                                          new QTableWidgetItem("q" + QString::number(row)));
 }
 
-QString TuringMachine::getState() const {
-    return currentState;
+// ===== СТРОКА =====
+void MainWindow::on_setTapeButton_clicked() {
+    QString s = ui->inputLine->text();
+
+    for (QChar c: s) {
+        if(!mainAlphabet.contains(QString(c))){
+            QMessageBox::warning(this,"Ошибка","Символ не из основного алфавита");
+            return;
+        }
+    }
+
+    machine.reset();
+    machine.setTape(s);
+
+    loadRules();
+    updateView();
 }
 
-int TuringMachine::getHead() const {
-    return head;
+// ===== ПРАВИЛА =====
+void MainWindow::loadRules() {
+    for (int i=0;i<ui->rulesTable->rowCount();++i) {
+        QString state = ui->rulesTable->verticalHeaderItem(i)->text();
+
+        for (int j=0;j<ui->rulesTable->columnCount();++j) {
+            auto item = ui->rulesTable->item(i,j);
+            if(!item) continue;
+
+            QStringList p = item->text().split(',');
+            if(p.size()!=3) continue;
+
+            Rule r{p[0][0], p[1]=="R"?1:(p[1]=="L"?-1:0), p[2]};
+            machine.setRule(state, fullAlphabet[j][0], r);
+        }
+    }
 }
 
-QChar TuringMachine::getSymbol(int pos) const {
-    return tape.contains(pos) ? tape[pos] : blank;
+// ===== ОБНОВЛЕНИЕ =====
+void MainWindow::updateView()
+{
+    int realHead = machine.getHead();
+
+    int visualHead = realHead - offset;
+    qDebug() << visualHead;
+    // правый край
+    if (visualHead >= 29) {
+        offset += (visualHead - 15);
+        visualHead = 15;
+    }
+
+    // левый край
+    if (visualHead < 0) {
+        offset += (visualHead - 15);
+        visualHead = 15;
+    }
+
+    // ОБНОВЛЯЕМ ЛЕНТУ
+    for(int i = 0; i < tapeItems.size(); i++){
+        int pos = offset + i;
+        QChar c = machine.getSymbol(pos);
+        tapeItems[i]->setPlainText(QString(c));
+    }
+
+    //АНИМАЦИЯ ГОЛОВКИ
+    QPropertyAnimation *a = new QPropertyAnimation(head,"pos");
+    a->setDuration(timer.interval()/2);
+    a->setEndValue(QPointF(visualHead * 40, 40));
+    a->start(QAbstractAnimation::DeleteWhenStopped);
+
+    highlightCell();
+}
+
+// ===== ПОДСВЕТКА =====
+void MainWindow::highlightCell() {
+    QString state = machine.getState();
+    QChar symbol = machine.getSymbol(machine.getHead());
+
+    for (int i=0;i<ui->rulesTable->rowCount();i++) {
+        for (int j=0;j<ui->rulesTable->columnCount();j++) {
+            auto item = ui->rulesTable->item(i,j);
+            if(item) item->setBackground(Qt::white);
+        }
+    }
+
+    for(int i=0;i<ui->rulesTable->rowCount();i++){
+        if(ui->rulesTable->verticalHeaderItem(i)->text()==state){
+            for(int j=0;j<fullAlphabet.size();j++){
+                if(fullAlphabet[j][0]==symbol){
+                    auto item = ui->rulesTable->item(i,j);
+                    if(item) item->setBackground(Qt::yellow);
+                }
+            }
+        }
+    }
+}
+
+// ШАГ
+void MainWindow::on_stepButton_clicked() {
+    if(!machine.step()){
+        QMessageBox::information(this,"Стоп","Нет правила");
+    }
+    updateView();
+}
+
+void MainWindow::runStep() {
+    if(!machine.step()){
+        timer.stop();
+    }
+    updateView();
+}
+
+void MainWindow::on_runButton_clicked(){
+    timer.start();
+}
+
+void MainWindow::on_stopButton_clicked(){
+    timer.stop();
+}
+
+// СКОРОСТЬ
+void MainWindow::on_speedSlider_valueChanged(int value) {
+    timer.setInterval(1000 - value);
 }
