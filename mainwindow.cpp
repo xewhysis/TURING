@@ -203,14 +203,14 @@ void MainWindow::highlightCell() {
 
 // ШАГ
 void MainWindow::on_stepButton_clicked() {
-    if (!machine.step()){
+    if (!machine.step()) {
         QMessageBox::information(this,"Стоп","Нет правила");
     }
     updateView();
 }
 
 void MainWindow::runStep() {
-    if (!machine.step()){
+    if (!machine.step()) {
         timer.stop();
     }
     updateView();
