@@ -111,7 +111,7 @@ void MainWindow::on_setTapeButton_clicked() {
     QString s = ui->inputLine->text();
 
     for (QChar c: s) {
-        if (!mainAlphabet.contains(QString(c))){
+        if (!mainAlphabet.contains(QString(c))) {
             QMessageBox::warning(
                 this,"Ошибка","Символ не из основного алфавита");
             return;
@@ -177,7 +177,7 @@ void MainWindow::updateView() {
     highlightCell();
 }
 
-// ===== ПОДСВЕТКА =====
+// ПОДСВЕТКА
 void MainWindow::highlightCell() {
     QString state = machine.getState();
     QChar symbol = machine.getSymbol(machine.getHead());
