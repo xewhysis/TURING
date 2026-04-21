@@ -53,6 +53,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
+        MainWindow->resize(491, 550);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         vboxLayout = new QVBoxLayout(centralwidget);
@@ -136,10 +137,10 @@ public:
 
         speedSlider = new QSlider(centralwidget);
         speedSlider->setObjectName("speedSlider");
-        speedSlider->setOrientation(Qt::Horizontal);
         speedSlider->setMinimum(100);
         speedSlider->setMaximum(900);
         speedSlider->setValue(400);
+        speedSlider->setOrientation(Qt::Horizontal);
 
         hboxLayout2->addWidget(speedSlider);
 
@@ -148,7 +149,6 @@ public:
 
         graphicsView = new QGraphicsView(centralwidget);
         graphicsView->setObjectName("graphicsView");
-        graphicsView->setMinimumHeight(120);
 
         vboxLayout->addWidget(graphicsView);
 

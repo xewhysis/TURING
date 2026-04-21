@@ -25,7 +25,40 @@ class HeadItem : public QGraphicsObject {
         tri << QPointF(0,20) << QPointF(40,20) << QPointF(20,0);
         p->setBrush(Qt::red);
         p->drawPolygon(tri);
+  }
+
+};
+
+
+
+class TapeCell : public QGraphicsObject {
+    Q_OBJECT
+public:
+    TapeCell(QChar symbol) : m_symbol(symbol) {
+        setFlag(ItemIsSelectable, false);
     }
+
+    QRectF boundingRect() const override {
+        return QRectF(0, 0, 40, 40);
+    }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) override {
+        painter->setPen(QPen(Qt::black, 1));
+        painter->setBrush(Qt::white);
+        painter->drawRect(boundingRect());
+
+        painter->setPen(Qt::black);
+        painter->setFont(QFont("Arial", 16));
+        painter->drawText(boundingRect(), Qt::AlignCenter, QString(m_symbol));
+    }
+
+    void setSymbol(QChar symbol) {
+        m_symbol = symbol;
+        update();  // Перерисовываем ячейку
+    }
+
+private:
+    QChar m_symbol;
 };
 
 class MainWindow : public QMainWindow {
@@ -56,7 +89,7 @@ class MainWindow : public QMainWindow {
   QStringList fullAlphabet;
 
   QGraphicsScene *scene;
-  QVector<QGraphicsTextItem*> tapeItems;
+  QVector<TapeCell*> tapeItems;
   HeadItem *head;
 
   QTimer timer;

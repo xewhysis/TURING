@@ -14,18 +14,20 @@ MainWindow::MainWindow(QWidget *parent)
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
+    // Теперь создаём TapeCell вместо QGraphicsTextItem
     for (int i = 0; i < 31; i++) {
-        auto t = scene->addText("^");
-        t->setPos(i*40,0);
-        tapeItems.append(t);
+        TapeCell *cell = new TapeCell('^');  // ← Изменено
+        cell->setPos(i * 40, 0);
+        scene->addItem(cell);
+        tapeItems.append(cell);
     }
 
     head = new HeadItem();
     scene->addItem(head);
-    head->setPos(visibleCenter*40,40);
+    head->setPos(visibleCenter * 40, 40);
 
     timer.setInterval(400);
-    connect(&timer,&QTimer::timeout,this,&MainWindow::runStep);
+    connect(&timer, &QTimer::timeout, this, &MainWindow::runStep);
 }
 
 MainWindow::~MainWindow() {
@@ -135,8 +137,25 @@ void MainWindow::loadRules() {
             if (!item) continue;
 
             QStringList p = item->text().split(',');
+            if (p[0] == "!") {
+                p[0] = "";
+                p.append("");
+                p.append("!");
+            }
+            for (QString &s : p) {
+                s = s.trimmed();
+            }
+            //for (QString s: p) {
+            //    qDebug() << s;
+            //}
             if (p.size()!=3) continue;
+            // qDebug() << "228";
 
+            QChar symbol = fullAlphabet[j][0];
+            p[0] = p[0] == "" ? symbol : p[0];
+            p[1] = p[1] == "" ? "S" : p[1];
+            p[2] = p[2] == "" ? state : p[2];
+            qDebug() << p[0] << " " << p[1] << " " << p[2];
             Rule r{p[0][0], p[1]=="R"?1:(p[1]=="L"?-1:0), p[2]};
             machine.setRule(state, fullAlphabet[j][0], r);
         }
@@ -149,28 +168,26 @@ void MainWindow::updateView() {
 
     int visualHead = realHead - offset;
     qDebug() << visualHead;
-    // правый край
+
     if (visualHead >= 29) {
         offset += (visualHead - 15);
         visualHead = 15;
     }
 
-    // левый край
     if (visualHead < 0) {
         offset += (visualHead - 15);
         visualHead = 15;
     }
 
-    // ОБНОВЛЯЕМ ЛЕНТУ
-    for (int i = 0; i < tapeItems.size(); i++){
+    // ОБНОВЛЯЕМ ЛЕНТУ - используем setSymbol
+    for (int i = 0; i < tapeItems.size(); i++) {
         int pos = offset + i;
         QChar c = machine.getSymbol(pos);
-        tapeItems[i]->setPlainText(QString(c));
+        tapeItems[i]->setSymbol(c);  // ← Изменено! Больше не setPlainText
     }
 
-    //АНИМАЦИЯ ГОЛОВКИ
-    QPropertyAnimation *a = new QPropertyAnimation(head,"pos");
-    a->setDuration(timer.interval()/2);
+    QPropertyAnimation *a = new QPropertyAnimation(head, "pos");
+    a->setDuration(timer.interval() / 2);
     a->setEndValue(QPointF(visualHead * 40, 40));
     a->start(QAbstractAnimation::DeleteWhenStopped);
 
@@ -182,8 +199,8 @@ void MainWindow::highlightCell() {
     QString state = machine.getState();
     QChar symbol = machine.getSymbol(machine.getHead());
 
-    for (int i=0;i<ui->rulesTable->rowCount();i++) {
-        for (int j=0;j<ui->rulesTable->columnCount();j++) {
+    for (int i = 0; i < ui->rulesTable->rowCount(); ++i) {
+        for (int j = 0; j < ui->rulesTable->columnCount(); ++j) {
             auto item = ui->rulesTable->item(i,j);
             if (item) item->setBackground(Qt::white);
         }

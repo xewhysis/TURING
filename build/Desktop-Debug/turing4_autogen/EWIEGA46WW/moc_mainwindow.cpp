@@ -96,6 +96,77 @@ int HeadItem::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     return _id;
 }
 namespace {
+struct qt_meta_stringdata_TapeCell_t {
+    uint offsetsAndSizes[2];
+    char stringdata0[9];
+};
+#define QT_MOC_LITERAL(ofs, len) \
+    uint(sizeof(qt_meta_stringdata_TapeCell_t::offsetsAndSizes) + ofs), len 
+Q_CONSTINIT static const qt_meta_stringdata_TapeCell_t qt_meta_stringdata_TapeCell = {
+    {
+        QT_MOC_LITERAL(0, 8)   // "TapeCell"
+    },
+    "TapeCell"
+};
+#undef QT_MOC_LITERAL
+} // unnamed namespace
+
+Q_CONSTINIT static const uint qt_meta_data_TapeCell[] = {
+
+ // content:
+      10,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       0,    0, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+       0        // eod
+};
+
+Q_CONSTINIT const QMetaObject TapeCell::staticMetaObject = { {
+    QMetaObject::SuperData::link<QGraphicsObject::staticMetaObject>(),
+    qt_meta_stringdata_TapeCell.offsetsAndSizes,
+    qt_meta_data_TapeCell,
+    qt_static_metacall,
+    nullptr,
+    qt_incomplete_metaTypeArray<qt_meta_stringdata_TapeCell_t,
+        // Q_OBJECT / Q_GADGET
+        QtPrivate::TypeAndForceComplete<TapeCell, std::true_type>
+    >,
+    nullptr
+} };
+
+void TapeCell::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    (void)_o;
+    (void)_id;
+    (void)_c;
+    (void)_a;
+}
+
+const QMetaObject *TapeCell::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
+}
+
+void *TapeCell::qt_metacast(const char *_clname)
+{
+    if (!_clname) return nullptr;
+    if (!strcmp(_clname, qt_meta_stringdata_TapeCell.stringdata0))
+        return static_cast<void*>(this);
+    return QGraphicsObject::qt_metacast(_clname);
+}
+
+int TapeCell::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = QGraphicsObject::qt_metacall(_c, _id, _a);
+    return _id;
+}
+namespace {
 struct qt_meta_stringdata_MainWindow_t {
     uint offsetsAndSizes[20];
     char stringdata0[11];
