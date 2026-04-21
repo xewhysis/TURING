@@ -217,6 +217,7 @@ void MainWindow::runStep() {
 }
 
 void MainWindow::on_runButton_clicked() {
+    loadRules();
     timer.start();
 }
 
